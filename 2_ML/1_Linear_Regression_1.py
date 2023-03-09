@@ -12,7 +12,7 @@ plt.close("all")
 
 
 ## Step 1) Data Load
-dfLoad = pd.read_csv("https://raw.githubusercontent.com/meaningful96/DLproject/main/DataSet/1_LinearRegression_dataset.txt"
+dfLoad = pd.read_csv("https://raw.githubusercontent.com/meaningful96/Deep_Learning/main/1_DataSet/1_LinearRegression_dataset.txt"
                      , sep ="\s+")
 
 x = dfLoad["xx"]
