@@ -14,7 +14,7 @@ plt.close("all")
 
 ## Step 1) data loading and detaching
 
-dfLoad = pd.read_csv("https://raw.githubusercontent.com/meaningful96/DLproject/main/DataSet/2_Kmeans_dataset.txt",  sep="\s+")
+dfLoad = pd.read_csv("https://raw.githubusercontent.com/meaningful96/Deep_Learning/main/1_DataSet/2_Kmeans_dataset.txt",  sep="\s+")
 
 samples = np.array(dfLoad)
 x = np.array(dfLoad["X"])
