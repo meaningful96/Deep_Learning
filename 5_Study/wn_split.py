@@ -22,8 +22,7 @@ class LinkGraph:
             head_id, head, relation, tail_id, tail = ex['head_id'], ex['head'], ex['relation'], ex['tail_id'], ex['tail']
         
             # Add to graph with all details
-            self.graph[head_id].add((head_id, head, relat:w
-                                     ion, tail_id, tail))
+            self.graph[head_id].add((head_id, head, relation, tail_id, tail))
         
             # Check if tail_id is not in the graph and then add the corresponding head details
             self.graph[tail_id].add((tail_id, tail, relation, head_id, head))
@@ -103,31 +102,30 @@ class LinkGraph:
                     if sample_count >= max_samples:
                         break
         
-        # Logic to add random samples for disconnected entities
-        all_entities = list(self.graph.keys())
-        unvisited_entities = set(all_entities) - set(hop_distances.keys())
+        # # Logic to add random samples for disconnected entities
+        # all_entities = list(self.graph.keys())
+        # unvisited_entities = set(all_entities) - set(hop_distances.keys())
         
-        while sample_count < max_samples and unvisited_entities:
-            random_entity = random.choice(list(unvisited_entities))
-            random_sample = random.choice(list(link_graph[random_entity]))
-            if random_sample[0] not in exclude_ids and random_sample[3] not in exclude_ids:
-                results.append({
-                    "head_id": random_sample[0],
-                    "head": random_sample[1],
-                    "relation": random_sample[2],
-                    "tail_id": random_sample[3],
-                    "tail": random_sample[4]
-                })
-                sample_count += 1
+        # while sample_count < max_samples and unvisited_entities:
+        #     random_entity = random.choice(list(unvisited_entities))
+        #     random_sample = random.choice(list(link_graph[random_entity]))
+        #     if random_sample[0] not in exclude_ids and random_sample[3] not in exclude_ids:
+        #         results.append({
+        #             "head_id": random_sample[0],
+        #             "head": random_sample[1],
+        #             "relation": random_sample[2],
+        #             "tail_id": random_sample[3],
+        #             "tail": random_sample[4]
+        #         })
+        #         sample_count += 1
 
-            unvisited_entities.remove(random_entity)
+        #     unvisited_entities.remove(random_entity)
 
         return results
 
-    
-    
+# """
 start_time = time.time()    
-train_path_wn = "C:/Users/USER/Desktop/json/WN18RR/test_example.txt.json"
+train_path_wn = "C:/Users/USER/Desktop/json/WN18RR/train.txt.json"
 with open(train_path_wn, 'r', encoding='utf-8') as f:
     train_data_wn = json.load(f)
 
@@ -140,13 +138,13 @@ for example in train_data_wn:
     tail_id = example['tail_id']
     
     # Create positive samples
-    positive_samples = G_wn.create_positive_samples(head_id, tail_id, 1, 9)
+    positive_samples = G_wn.create_positive_samples(head_id, tail_id, 1, 100)
     positive_samples.insert(0,example) 
     # Add the results to the list
     all_positive_samples.append(positive_samples)
 
-# # Save the combined results to a JSON file
-output_path = "C:/Users/USER/Desktop/json/WN18RR/test_positive.json"
+# Save the combined results to a JSON file
+output_path = "C:/Users/USER/Desktop/json/WN18RR/test_HN.json"
 with open(output_path, 'w', encoding='utf-8') as f:
     json.dump(all_positive_samples, f, ensure_ascii=False, indent=4)
 
@@ -158,15 +156,71 @@ print("Positive samples of WN18RR saved")
 print("Taking time:",datetime.timedelta(seconds = sec))
 
 print("Done!!")
+# """
+"""
+start_time = time.time()    
+train_path_wn = "C:/Users/USER/Desktop/json/WN18RR/train.txt.json"
+with open(train_path_wn, 'r', encoding='utf-8') as f:
+    train_data_wn = json.load(f)
 
+G_wn = LinkGraph(train_path_wn)
+
+valid_path_wn = "C:/Users/USER/Desktop/json/WN18RR/valid.txt.json"
+with open(valid_path_wn, 'r', encoding = 'utf-8') as f:
+    valid_data_wn = json.load(f)
+
+all_positive_samples = []
+# Iterate over the WordNet train set
+for example in valid_data_wn:
+    head_id = example['head_id']
+    tail_id = example['tail_id']
+    
+    # Create positive samples
+    positive_samples = G_wn.create_positive_samples(head_id, tail_id, 1, 255)
+    positive_samples.insert(0,example) 
+    # Add the results to the list
+    all_positive_samples.append(positive_samples)
+
+# Save the combined results to a JSON file
+output_path = "C:/Users/USER/Desktop/json/WN18RR/positive_samples_valid.json"
+with open(output_path, 'w', encoding='utf-8') as f:
+    json.dump(all_positive_samples, f, ensure_ascii=False, indent=4)
+
+end_time = time.time()
+sec = end_time - start_time
+
+print("Total Length:", len(all_positive_samples))
+print("Positive samples of WN18RR saved")
+print("Taking time:",datetime.timedelta(seconds = sec))
+
+print("Done!!")
+"""
 #%%
-import json
-
-path = 'C:/Users/USER/Desktop/json/WN18RR/test_positive.json'
+path = "C:/Users/USER/Desktop/json/WN18RR/test_HN.json"
 with open(path, 'r', encoding='utf-8') as f:
     examples = json.load(f)           
 
 dict_total = []
 for index, sublist in enumerate(examples):
-    if len(sublist) != 10:
+    if len(sublist) != 101:
         dict_total.append((index, sublist))
+
+
+
+
+print(len(dict_total))
+#%%
+indices = []
+for i in range(len(dict_total)):
+    indices.append(dict_total[i][0])
+    
+i_1, i_2, i_3,i_4, = [],[],[],[]
+for i in range(len(indices)):
+    if i < 25:
+        i_1.append(indices[i])
+    if 25 <= i < 50:
+        i_2.append(indices[i])
+    if 50 <= i < 70:
+        i_3.append(indices[i])
+    if 70 <= i:
+        i_4.append(indices[i])        
